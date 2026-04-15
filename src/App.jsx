@@ -70,7 +70,7 @@ const palette = {
 
 const designTokens = {
   typography: {
-    display: '"Cormorant Garamond", serif',
+    display: '"Great Vibes", cursive',
     script: '"Great Vibes", cursive',
     body: '"Cormorant Garamond", serif',
     ui: '"Inter", "Be Vietnam Pro", system-ui, sans-serif',
@@ -82,6 +82,11 @@ const inviteTypography = {
   muted: '#7f9083',
   accent: '#86a58a',
   label: '#7b9a7e',
+}
+
+const invitationTypography = {
+  hard: '"Lora", "Cormorant Garamond", serif',
+  soft: '"Great Vibes", cursive',
 }
 
 const embeddedFallbackImage = `data:image/svg+xml;utf8,${encodeURIComponent(
@@ -159,6 +164,7 @@ function App() {
   const [rsvpList, setRsvpList] = useState(() => loadSavedRsvps())
   const [latestRsvp, setLatestRsvp] = useState(null)
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0)
 
   useEffect(() => {
     window.localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(rsvpList))
@@ -270,6 +276,14 @@ function App() {
     }
   }
 
+  const showPreviousGalleryImage = () => {
+    setActiveGalleryIndex((prev) => (prev === 0 ? invite.gallery.length - 1 : prev - 1))
+  }
+
+  const showNextGalleryImage = () => {
+    setActiveGalleryIndex((prev) => (prev + 1) % invite.gallery.length)
+  }
+
   const onRsvpChange = (field, value) => {
     setRsvpForm((prev) => {
       if (field !== 'attendance') return { ...prev, [field]: value }
@@ -324,10 +338,10 @@ function App() {
 
   return (
     <main
-      className="min-h-screen bg-[#eef4ea] text-slate-800"
+      className="min-h-screen overflow-x-hidden bg-[#eef4ea] text-slate-800"
       style={{ fontFamily: designTokens.typography.body }}
     >
-      <section className="relative h-screen min-h-[520px] w-full overflow-hidden md:min-h-[620px]">
+      <section className="relative h-screen min-h-[430px] w-full overflow-hidden md:min-h-[560px]">
         <img
           src={invite.heroImage}
           alt="Wedding cover"
@@ -338,16 +352,26 @@ function App() {
         <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-white">
           <div>
             <p
-              className="text-xs uppercase tracking-[0.48em] md:text-sm"
+              className="text-[10px] uppercase tracking-[0.4em] md:text-sm"
               style={{ fontFamily: designTokens.typography.ui }}
             >
               Save The Date
             </p>
-            <h1 className="mt-5 text-5xl md:text-8xl" style={{ fontFamily: designTokens.typography.script }}>
-              {invite.groom} & {invite.bride}
+            <h1
+              className="mt-4 text-[2.8rem] leading-[1.04] sm:text-5xl md:mt-5 md:text-6xl lg:text-7xl"
+              style={{ fontFamily: designTokens.typography.script }}
+            >
+              <span className="block lg:hidden">
+                <span className="block whitespace-nowrap">{invite.groom}</span>
+                <span className="block leading-[0.9]">&</span>
+                <span className="block whitespace-nowrap">{invite.bride}</span>
+              </span>
+              <span className="hidden lg:block">
+                {invite.groom} & {invite.bride}
+              </span>
             </h1>
             <p
-              className="mt-5 text-sm uppercase tracking-[0.24em] md:text-base"
+              className="mt-4 text-[11px] uppercase tracking-[0.22em] md:mt-5 md:text-base"
               style={{ fontFamily: designTokens.typography.ui }}
             >
               Wedding Invitation
@@ -356,16 +380,16 @@ function App() {
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-5 py-11 md:px-10 md:py-14">
-        <div className="mx-auto max-w-[56rem] rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] px-5 py-9 text-center shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:px-11 md:py-10">
+      <section className="bg-[#eef4ea] px-5 py-9 md:px-10 md:py-12">
+        <div className="mx-auto max-w-[56rem] rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] px-4 py-6 text-center shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:px-10 md:py-8">
           <div className="grid gap-8 md:grid-cols-2 md:gap-10">
             <div>
-              <p style={{ color: inviteTypography.label }} className="text-xs font-medium uppercase tracking-[0.28em]">
+              <p style={{ color: inviteTypography.label }} className="text-xs font-medium uppercase tracking-[0.2em]">
                 {invite.groomFamilyTitle}
               </p>
               <p
-                style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-                className="mt-3 text-[1.72rem] leading-[1.35] font-medium md:text-[1.9rem]"
+                style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+                className="mt-2 text-[1.2rem] leading-[1.4] font-medium md:text-[1.6rem]"
               >
                 {invite.groomParents[0]}
                 <br />
@@ -373,12 +397,12 @@ function App() {
               </p>
             </div>
             <div>
-              <p style={{ color: inviteTypography.label }} className="text-xs font-medium uppercase tracking-[0.28em]">
+              <p style={{ color: inviteTypography.label }} className="text-xs font-medium uppercase tracking-[0.2em]">
                 {invite.brideFamilyTitle}
               </p>
               <p
-                style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-                className="mt-3 text-[1.72rem] leading-[1.35] font-medium md:text-[1.9rem]"
+                style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+                className="mt-2 text-[1.2rem] leading-[1.4] font-medium md:text-[1.6rem]"
               >
                 {invite.brideParents[0]}
                 <br />
@@ -388,68 +412,75 @@ function App() {
           </div>
 
           <h2
-            style={{ fontFamily: designTokens.typography.display, color: inviteTypography.primary }}
-            className="mt-9 text-[2.3rem] font-semibold uppercase leading-[1.1] tracking-[0.01em] md:text-[2.9rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+            className="mt-7 text-[1.55rem] font-semibold uppercase leading-[1.12] tracking-[0.02em] md:text-[2.2rem]"
           >
             Trân trọng kính mời
           </h2>
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-            className="mt-3 text-[1.72rem] font-semibold md:text-[1.95rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+            className="mt-2 text-[1.25rem] font-semibold md:text-[1.6rem]"
           >
             Bạn cùng gia đình
           </p>
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.muted }}
-            className="mt-2 text-[1.32rem] italic md:text-[1.5rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.muted }}
+            className="mt-2 text-[0.95rem] italic md:text-[1.2rem]"
           >
             (Tới dự Lễ Thành Hôn của hai con chúng tôi)
           </p>
 
           <p
-            style={{ fontFamily: designTokens.typography.display, color: inviteTypography.accent }}
-            className="mt-7 text-[2.7rem] font-semibold leading-[1.1] tracking-[0.01em] md:text-[3.35rem]"
+            style={{ fontFamily: invitationTypography.soft, color: inviteTypography.accent }}
+            className="mt-5 text-[2.25rem] leading-[1.02] tracking-[0.01em] md:text-[3rem]"
           >
-            {invite.groom} ❤ {invite.bride}
+            <span className="block lg:hidden">
+              <span className="block whitespace-nowrap">{invite.groom}</span>
+              <span className="block leading-[0.9]">❤</span>
+              <span className="block whitespace-nowrap">{invite.bride}</span>
+            </span>
+            <span className="hidden lg:block">
+              {invite.groom} ❤ {invite.bride}
+            </span>
           </p>
 
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-            className="mt-6 text-[1.52rem] md:text-[1.8rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+            className="mt-4 text-[1.1rem] md:text-[1.4rem]"
           >
             Tổ chức vào lúc {invite.time}
           </p>
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-            className="mt-2 text-[1.66rem] font-semibold md:text-[1.95rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+            className="mt-2 text-[1.2rem] font-semibold md:text-[1.56rem]"
           >
             {invite.dateFull}
           </p>
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.muted }}
-            className="mt-2 text-[1.2rem] italic md:text-[1.32rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.muted }}
+            className="mt-2 text-[0.9rem] italic md:text-[1.1rem]"
           >
             {invite.lunarDate}
           </p>
 
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.primary }}
-            className="mx-auto mt-7 max-w-3xl text-[1.48rem] leading-[1.45] md:text-[1.75rem]"
+            style={{ fontFamily: invitationTypography.hard, color: inviteTypography.primary }}
+            className="mx-auto mt-5 max-w-3xl text-[1.05rem] leading-[1.45] md:text-[1.38rem]"
           >
             {invite.ceremonyVenueLabel}: {invite.address}
           </p>
 
           <p
-            style={{ fontFamily: designTokens.typography.body, color: inviteTypography.label }}
-            className="mx-auto mt-6 max-w-2xl text-[1.28rem] italic leading-[1.5] md:text-[1.45rem]"
+            style={{ fontFamily: invitationTypography.soft, color: inviteTypography.label }}
+            className="mx-auto mt-4 max-w-2xl text-[1.2rem] italic leading-[1.4] md:text-[1.45rem]"
           >
             Sự hiện diện của Quý khách là niềm vinh hạnh của gia đình chúng tôi!
           </p>
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-5 py-12 md:px-10 md:py-16">
-        <div className="mx-auto max-w-[56rem] rounded-[28px] border border-[#d4e0cf] bg-[#f5faf2] p-6 shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:p-10">
+      <section className="bg-[#eef4ea] px-5 py-10 md:px-10 md:py-12">
+        <div className="mx-auto max-w-[56rem] rounded-[28px] border border-[#d4e0cf] bg-[#f5faf2] p-5 shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:p-8">
           <div className="text-center">
             <p
               className="text-[10px] uppercase tracking-[0.5em]"
@@ -458,14 +489,14 @@ function App() {
               The Couple
             </p>
             <h3
-              className="mt-3 text-[2rem] font-semibold md:text-[2.5rem]"
+              className="mt-2 text-[1.7rem] font-semibold md:text-[2.15rem]"
               style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
             >
               Cô Dâu & Chú Rể
             </h3>
           </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
             <CoupleCard
               image={invite.groomProfile.image}
               name={invite.groomProfile.name}
@@ -480,7 +511,7 @@ function App() {
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-6 py-14 md:px-10">
+      <section className="bg-[#eef4ea] px-6 py-10 md:px-10">
         <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
           <InfoTile title="Ngày cưới" value={invite.date} />
           <InfoTile title="Thời gian" value={invite.time} />
@@ -488,42 +519,79 @@ function App() {
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-6 py-14 md:px-10 md:py-20">
-        <div className="mx-auto max-w-6xl">
+      <section className="bg-[#eef4ea] px-6 py-10 md:px-10 md:py-14">
+        <div className="mx-auto max-w-4xl">
           <div className="text-center">
             <p
               className="text-[10px] uppercase tracking-[0.5em]"
               style={{ color: inviteTypography.label, fontFamily: designTokens.typography.ui }}
             >
-              Gallery
+              Memories
             </p>
             <h3
-              className="mt-3 text-[2rem] font-semibold md:text-[2.5rem]"
-              style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
+              className="mt-2 text-[2rem] font-semibold md:text-[2.8rem]"
+              style={{ color: inviteTypography.accent, fontFamily: designTokens.typography.script }}
             >
-              Khoảnh Khắc
+              Our Memories of Love
             </h3>
           </div>
-          <div className="mt-5 grid gap-5 md:grid-cols-2">
-            {invite.gallery.map((image, index) => (
-              <div
-                key={image}
-                className="overflow-hidden rounded-[24px] border border-white shadow-[0_12px_28px_rgba(56,72,58,0.16)]"
+
+          <div className="mt-5 overflow-hidden rounded-[24px] border border-[#d8ded4] bg-[#f8fbf6] p-2 shadow-[0_12px_28px_rgba(56,72,58,0.16)] md:p-3">
+            <div className="relative overflow-hidden rounded-[18px]">
+              <img
+                src={invite.gallery[activeGalleryIndex]}
+                alt={`Wedding gallery ${activeGalleryIndex + 1}`}
+                className="h-[21rem] w-full object-cover sm:h-[28rem] md:h-[44rem]"
+                onError={applyFallbackImage}
+              />
+
+              <button
+                type="button"
+                onClick={showPreviousGalleryImage}
+                aria-label="Ảnh trước"
+                className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 text-xl text-[#7a7d76] backdrop-blur transition hover:bg-white"
               >
-                <img
-                  src={image}
-                  alt={`Wedding gallery ${index + 1}`}
-                  className="h-72 w-full object-cover md:h-80"
-                  onError={applyFallbackImage}
-                />
-              </div>
-            ))}
+                ‹
+              </button>
+
+              <button
+                type="button"
+                onClick={showNextGalleryImage}
+                aria-label="Ảnh sau"
+                className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/70 text-xl text-[#7a7d76] backdrop-blur transition hover:bg-white"
+              >
+                ›
+              </button>
+            </div>
+
+            <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+              {invite.gallery.map((image, index) => (
+                <button
+                  key={image}
+                  type="button"
+                  onClick={() => setActiveGalleryIndex(index)}
+                  className={`shrink-0 overflow-hidden rounded-xl border-2 transition ${
+                    activeGalleryIndex === index
+                      ? 'border-[#be8595]'
+                      : 'border-transparent opacity-80 hover:opacity-100'
+                  }`}
+                  aria-label={`Chọn ảnh ${index + 1}`}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="h-12 w-12 object-cover md:h-14 md:w-14"
+                    onError={applyFallbackImage}
+                  />
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-5 py-12 md:px-10 md:py-16">
-        <div className="mx-auto max-w-2xl rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] p-6 shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:p-10">
+      <section className="bg-[#eef4ea] px-5 py-10 md:px-10 md:py-12">
+        <div className="mx-auto max-w-2xl rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] p-5 shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:p-8">
           <div className="text-center">
             <p
               style={{ color: '#7f8681', fontFamily: designTokens.typography.ui }}
@@ -533,7 +601,7 @@ function App() {
             </p>
             <h3
               style={{ color: '#1f2321', fontFamily: designTokens.typography.display }}
-              className="mt-2 text-[2.2rem] font-semibold md:text-[2.9rem]"
+              className="mt-2 text-[1.85rem] font-semibold md:text-[2.4rem]"
             >
               Xác Nhận Tham Dự
             </h3>
@@ -542,13 +610,13 @@ function App() {
             </p>
           </div>
 
-          <form className="mt-8 space-y-5" onSubmit={submitRsvp}>
+          <form className="mt-6 space-y-4" onSubmit={submitRsvp}>
             <label className="block text-sm" style={{ fontFamily: designTokens.typography.ui }}>
               <span className="mb-2 block font-medium text-[#262b28]">Họ và tên *</span>
               <input
                 value={rsvpForm.name}
                 onChange={(event) => onRsvpChange('name', event.target.value)}
-                className="w-full rounded-xl border border-[#e3e4e3] bg-white px-4 py-3 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
+                className="w-full rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
                 placeholder="Nhập họ tên của bạn"
               />
               {rsvpErrors.name && <span className="mt-1 block text-xs text-red-600">{rsvpErrors.name}</span>}
@@ -557,7 +625,7 @@ function App() {
             <div className="text-sm" style={{ fontFamily: designTokens.typography.ui }}>
               <p className="mb-2 font-medium text-[#262b28]">Bạn sẽ tham dự? *</p>
               <div className="space-y-3">
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-3">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5">
                   <input
                     type="radio"
                     name="attendance"
@@ -568,7 +636,7 @@ function App() {
                   />
                   <span>Có, tôi sẽ đến</span>
                 </label>
-                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-3">
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5">
                   <input
                     type="radio"
                     name="attendance"
@@ -590,7 +658,7 @@ function App() {
                 <div className="text-sm" style={{ fontFamily: designTokens.typography.ui }}>
                   <p className="mb-2 font-medium text-[#262b28]">Bạn là khách của? *</p>
                   <div className="grid grid-cols-2 gap-3">
-                    <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-3">
+                    <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5">
                       <input
                         type="radio"
                         name="guestOf"
@@ -601,7 +669,7 @@ function App() {
                       />
                       <span>Cô dâu</span>
                     </label>
-                    <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-3">
+                    <label className="flex cursor-pointer items-center justify-center gap-3 rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5">
                       <input
                         type="radio"
                         name="guestOf"
@@ -623,7 +691,7 @@ function App() {
                   <select
                     value={rsvpForm.guests}
                     onChange={(event) => onRsvpChange('guests', event.target.value)}
-                    className="w-full rounded-xl border border-[#e3e4e3] bg-white px-4 py-3 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
+                    className="w-full rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
                   >
                     {Array.from({ length: 10 }, (_, index) => {
                       const value = String(index + 1)
@@ -647,14 +715,14 @@ function App() {
                 rows={4}
                 value={rsvpForm.message}
                 onChange={(event) => onRsvpChange('message', event.target.value)}
-                className="w-full resize-y rounded-xl border border-[#e3e4e3] bg-white px-4 py-3 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
+                className="w-full resize-y rounded-xl border border-[#e3e4e3] bg-white px-4 py-2.5 text-base outline-none focus:border-[#9db49e] focus:ring-2 focus:ring-[#9db49e]/25"
                 placeholder="Gửi lời chúc đến cô dâu chú rể..."
               />
             </label>
 
             <button
               type="submit"
-              className="w-full rounded-full bg-[#3f5d45] px-6 py-3 text-sm font-semibold uppercase tracking-[0.28em] text-white transition hover:bg-[#334d39]"
+              className="w-full rounded-full bg-[#3f5d45] px-6 py-2.5 text-sm font-semibold uppercase tracking-[0.24em] text-white transition hover:bg-[#334d39]"
               style={{ fontFamily: designTokens.typography.ui }}
             >
               Gửi xác nhận
@@ -672,8 +740,8 @@ function App() {
         </div>
       </section>
 
-      <section className="bg-[#eef4ea] px-5 py-14 md:px-10 md:py-20">
-        <div className="mx-auto max-w-4xl rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] px-6 py-10 text-center shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:px-12">
+      <section className="bg-[#eef4ea] px-5 py-9 md:px-10 md:py-12">
+        <div className="mx-auto max-w-3xl rounded-[28px] border border-[#d5e1cf] bg-[#f5faf2] px-5 py-7 text-center shadow-[0_10px_28px_rgba(74,98,77,0.1)] md:px-9">
           <p
             className="text-[11px] uppercase tracking-[0.48em]"
             style={{ color: inviteTypography.muted, fontFamily: designTokens.typography.ui }}
@@ -681,22 +749,22 @@ function App() {
             Gift
           </p>
           <h3
-            className="mt-2 text-[2.4rem] font-semibold md:text-[3rem]"
+            className="mt-2 text-[1.7rem] font-semibold md:text-[2.2rem]"
             style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
           >
             Mừng Cưới
           </h3>
 
-          <div className="mx-auto mt-8 max-w-md rounded-[20px] border border-[#dfdfdf] bg-white p-6">
+          <div className="mx-auto mt-5 max-w-xs rounded-[18px] border border-[#dfdfdf] bg-white p-4 md:max-w-sm">
             <img
               src={invite.bank.qrImage}
               alt="QR code mừng cưới"
-              className="mx-auto aspect-square w-52 object-cover md:w-56"
+              className="mx-auto aspect-square w-36 object-cover md:w-44"
               onError={applyFallbackQr}
             />
             <p
-              className="mt-4 text-[2rem] leading-none"
-              style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
+              className="mt-3 text-[1.38rem] font-semibold leading-none tracking-[0.04em] md:text-[1.5rem]"
+              style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.ui }}
             >
               {invite.bank.accountName}
             </p>
@@ -707,19 +775,19 @@ function App() {
               {invite.bank.bankName}
             </p>
             <p
-              className="mt-3 text-[1.9rem] font-semibold tracking-[0.06em]"
+              className="mt-2 text-[1.3rem] font-semibold tracking-[0.04em]"
               style={{ color: '#1f2321', fontFamily: designTokens.typography.ui }}
             >
               {invite.bank.accountNumber}
             </p>
           </div>
 
-          <div className="mt-12">
-            <p className="text-2xl md:text-5xl" style={{ color: inviteTypography.accent }}>
+          <div className="mt-7">
+            <p className="text-lg md:text-3xl" style={{ color: inviteTypography.accent }}>
               •
             </p>
             <p
-              className="mt-5 text-[2.2rem] md:text-[2.8rem]"
+              className="mt-3 text-[1.6rem] md:text-[2rem]"
               style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
             >
               {invite.groom} & {invite.bride}
@@ -740,7 +808,7 @@ function App() {
         type="button"
         onClick={toggleMusic}
         title={invite.music.title}
-        className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#d8e0d3] bg-white shadow-[0_10px_28px_rgba(44,62,46,0.24)] transition hover:scale-105"
+        className="fixed bottom-4 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-2xl border border-[#d8e0d3] bg-white/95 shadow-[0_10px_28px_rgba(44,62,46,0.24)] transition hover:scale-105 md:bottom-6 md:right-6 md:h-16 md:w-16"
         aria-label={isMusicPlaying ? 'Tắt nhạc nền' : 'Phát nhạc nền'}
       >
         <span
@@ -786,12 +854,12 @@ function CoupleCard({ image, name, role }) {
         <img
           src={image}
           alt={`${role} ${name}`}
-          className="aspect-[3/4] w-full rounded-[14px] object-cover"
+          className="aspect-[4/5] w-full rounded-[14px] object-cover"
           onError={applyFallbackImage}
         />
       </div>
       <p
-        className="mt-4 text-[2rem] leading-none md:text-[2.2rem]"
+        className="mt-3 text-[1.65rem] leading-none md:text-[1.95rem]"
         style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.display }}
       >
         {name}
