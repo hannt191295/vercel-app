@@ -436,11 +436,11 @@ function App() {
           >
             <span className="block lg:hidden">
               <span className="block whitespace-nowrap">{invite.groom}</span>
-              <span className="block leading-[0.9]">❤</span>
+              <span className="block leading-[0.9]">&amp;</span>
               <span className="block whitespace-nowrap">{invite.bride}</span>
             </span>
             <span className="hidden lg:block">
-              {invite.groom} ❤ {invite.bride}
+              {invite.groom} &amp; {invite.bride}
             </span>
           </p>
 
