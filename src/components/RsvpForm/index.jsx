@@ -21,9 +21,6 @@ export default function RsvpForm() {
           >
             Xác Nhận Tham Dự
           </h3>
-          <p className="mt-2 text-sm text-[#7d8280]" style={{ fontFamily: designTokens.typography.ui }}>
-            Xin vui lòng xác nhận trước ngày {invite.rsvpDeadline}
-          </p>
         </div>
 
         <form className="mt-6 space-y-4" onSubmit={submit}>
