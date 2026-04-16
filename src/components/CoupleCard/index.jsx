@@ -8,6 +8,7 @@ export default function CoupleCard({ image, name, role }) {
         <img
           src={image}
           alt={`${role} ${name}`}
+          loading="lazy"
           className="aspect-[3/4] w-full rounded-[14px] object-cover object-top"
           onError={applyFallbackImage}
         />

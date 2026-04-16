@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { RSVP_STORAGE_KEY } from '../data/invite'
 
+const GOOGLE_SHEET_URL =
+  'https://script.google.com/macros/s/AKfycbwRHwKtbnw4YCPED5ExH8xNoQv3j9rilyfhpXcka0sE92JXHeka29gmB9yF3oV-1Z-R/exec'
+
 const defaultForm = {
   name: '',
   attendance: '',
@@ -26,11 +29,48 @@ function loadSavedRsvps() {
   }
 }
 
+function sendToGoogleSheet(payload) {
+  const data = {
+    name: payload.name,
+    attendance: attendanceLabel[payload.attendance] || payload.attendance,
+    guestOf: payload.guestOf === 'bride' ? 'Cô dâu' : payload.guestOf === 'groom' ? 'Chú rể' : '',
+    guests: String(payload.guests),
+    message: payload.message,
+  }
+
+  const iframe = document.createElement('iframe')
+  iframe.name = 'rsvp-hidden-frame'
+  iframe.style.display = 'none'
+  document.body.appendChild(iframe)
+
+  const form = document.createElement('form')
+  form.method = 'POST'
+  form.action = GOOGLE_SHEET_URL
+  form.target = 'rsvp-hidden-frame'
+
+  for (const [key, value] of Object.entries(data)) {
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = key
+    input.value = value
+    form.appendChild(input)
+  }
+
+  document.body.appendChild(form)
+  form.submit()
+
+  setTimeout(() => {
+    form.remove()
+    iframe.remove()
+  }, 5000)
+}
+
 export function useRsvp() {
   const [form, setForm] = useState(defaultForm)
   const [errors, setErrors] = useState({})
   const [list, setList] = useState(() => loadSavedRsvps())
   const [latestRsvp, setLatestRsvp] = useState(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     window.localStorage.setItem(RSVP_STORAGE_KEY, JSON.stringify(list))
@@ -50,7 +90,7 @@ export function useRsvp() {
     })
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
 
     const nextErrors = {}
@@ -82,11 +122,15 @@ export function useRsvp() {
       submittedAt: new Date().toISOString(),
     }
 
+    setIsSubmitting(true)
+    sendToGoogleSheet(payload)
+    setIsSubmitting(false)
+
     setList((prev) => [payload, ...prev].slice(0, 100))
     setLatestRsvp(payload)
     setErrors({})
     setForm(defaultForm)
   }
 
-  return { form, errors, latestRsvp, onChange, submit }
+  return { form, errors, latestRsvp, isSubmitting, onChange, submit }
 }

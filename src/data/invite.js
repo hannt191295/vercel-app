@@ -10,7 +10,7 @@ export const invite = {
   date: '02/05/2026',
   dateFull: 'Thứ Bảy, ngày 2 tháng 5 năm 2026',
   dateCompact: '02 . 05 . 2026',
-  lunarDate: '(Tức ngày 16 tháng 03 năm Ất Tỵ)',
+  lunarDate: '(Tức ngày 16 tháng 03 năm Đoan Ngọ)',
   rsvpDeadline: '16/03/2025',
   time: '14:30',
   venue: 'Gia đình Nhà Trai',

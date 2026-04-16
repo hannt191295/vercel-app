@@ -3,7 +3,7 @@ import { invite } from '../../data/invite'
 import { useRsvp, attendanceLabel } from '../../hooks/useRsvp'
 
 export default function RsvpForm() {
-  const { form, errors, latestRsvp, onChange, submit } = useRsvp()
+  const { form, errors, latestRsvp, isSubmitting, onChange, submit } = useRsvp()
 
   return (
     <section className="bg-[#eef4ea] px-5 py-10 md:px-10 md:py-12">
@@ -138,10 +138,11 @@ export default function RsvpForm() {
 
           <button
             type="submit"
-            className="w-full rounded-full bg-[#3f5d45] px-6 py-2.5 text-sm font-semibold uppercase tracking-[0.24em] text-white transition hover:bg-[#334d39]"
+            disabled={isSubmitting}
+            className="w-full rounded-full bg-[#3f5d45] px-6 py-2.5 text-sm font-semibold uppercase tracking-[0.24em] text-white transition hover:bg-[#334d39] disabled:opacity-60"
             style={{ fontFamily: designTokens.typography.ui }}
           >
-            Gửi xác nhận
+            {isSubmitting ? 'Đang gửi...' : 'Gửi xác nhận'}
           </button>
 
           {latestRsvp && (

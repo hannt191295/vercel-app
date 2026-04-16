@@ -23,6 +23,7 @@ export default function GiftSection() {
           <img
             src={invite.bank.qrImage}
             alt="QR code mừng cưới"
+            loading="lazy"
             className="mx-auto aspect-square w-36 object-cover md:w-44"
             onError={applyFallbackQr}
           />

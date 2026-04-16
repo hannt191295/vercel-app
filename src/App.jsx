@@ -1,6 +1,5 @@
 import { designTokens } from './config/theme'
 import { invite } from './data/invite'
-import { useAutoScroll } from './hooks/useAutoScroll'
 import { useMusic } from './hooks/useMusic.jsx'
 import CoverBanner from './components/CoverBanner'
 import Invitation from './components/Invitation'
@@ -12,7 +11,6 @@ import GiftSection from './components/GiftSection'
 import MusicToggle from './components/MusicToggle'
 
 function App() {
-  useAutoScroll()
   const { isPlaying, toggle, AudioElement } = useMusic(invite.music.url)
 
   return (

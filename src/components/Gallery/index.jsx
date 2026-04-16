@@ -42,6 +42,7 @@ export default function Gallery() {
             <img
               src={galleryImages[activeIndex]}
               alt={`Wedding gallery ${activeIndex + 1}`}
+              loading="lazy"
               className="h-[21rem] w-full object-cover object-top sm:h-[28rem] md:h-[44rem]"
             />
 
@@ -80,6 +81,7 @@ export default function Gallery() {
                 <img
                   src={image}
                   alt={`Thumbnail ${index + 1}`}
+                  loading="lazy"
                   className="h-12 w-12 object-cover md:h-14 md:w-14"
                 />
               </button>
