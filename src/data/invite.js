@@ -52,6 +52,6 @@ export const invite = {
   },
   music: {
     title: 'Wedding Background Music',
-    url: '/audio/dream-wedding.mp3',
+    url: '/audio/beautiful-in-white.mp3',
   },
 }
