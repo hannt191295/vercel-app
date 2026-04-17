@@ -14,29 +14,36 @@ export function useMusic(musicUrl) {
     audio.addEventListener('play', syncState)
     audio.addEventListener('pause', syncState)
 
-    const onFirstInteraction = async () => {
+    let started = false
+
+    const onInteraction = async () => {
+      if (started) {
+        removeListeners()
+        return
+      }
       try {
         await audio.play()
+        started = true
+        removeListeners()
       } catch {
-        /* Browser may still block */
+        /* Keep trying on next interaction */
       }
     }
 
+    const events = ['pointerdown', 'touchstart', 'click', 'keydown']
+
     const addListeners = () => {
-      window.addEventListener('pointerdown', onFirstInteraction, { once: true })
-      window.addEventListener('keydown', onFirstInteraction, { once: true })
-      window.addEventListener('touchstart', onFirstInteraction, { once: true })
+      events.forEach((evt) => window.addEventListener(evt, onInteraction, { passive: true }))
     }
 
     const removeListeners = () => {
-      window.removeEventListener('pointerdown', onFirstInteraction)
-      window.removeEventListener('keydown', onFirstInteraction)
-      window.removeEventListener('touchstart', onFirstInteraction)
+      events.forEach((evt) => window.removeEventListener(evt, onInteraction))
     }
 
     const tryAutoPlay = async () => {
       try {
         await audio.play()
+        started = true
       } catch {
         addListeners()
       }
@@ -70,7 +77,7 @@ export function useMusic(musicUrl) {
   }
 
   const AudioElement = (
-    <audio ref={audioRef} src={musicUrl} loop preload="none" />
+    <audio ref={audioRef} src={musicUrl} loop preload="auto" />
   )
 
   return { isPlaying, toggle, AudioElement }
