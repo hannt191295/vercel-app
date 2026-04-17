@@ -54,8 +54,8 @@ export default function Invitation() {
         </p>
 
         <p
-          style={{ fontFamily: invitationTypography.soft, color: inviteTypography.accent }}
-          className="mt-5 text-[2.25rem] leading-[1.02] tracking-[0.01em] md:text-[3rem]"
+          style={{ fontFamily: invitationTypography.soft, color: '#2f4836' }}
+          className="mt-5 text-[2.5rem] leading-[1.02] tracking-[0.01em] md:text-[3.2rem] drop-shadow-[0_1px_2px_rgba(47,72,54,0.15)]"
         >
           <span className="block lg:hidden">
             <span className="block whitespace-nowrap">{invite.groom}</span>
