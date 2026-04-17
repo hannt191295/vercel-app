@@ -1,6 +1,6 @@
 import { designTokens, inviteTypography } from '../../config/theme'
 import { invite } from '../../data/invite'
-import { applyFallbackQr } from '../../utils/fallback'
+import qrImage from './images/qr-code.jpg'
 
 export default function GiftSection() {
   return (
@@ -19,28 +19,27 @@ export default function GiftSection() {
           Mừng Cưới
         </h3>
 
-        <div className="mx-auto mt-5 max-w-xs rounded-[18px] border border-[#dfdfdf] bg-white p-4 md:max-w-sm">
+        <div className="mx-auto mt-5 max-w-[14rem] rounded-[16px] border border-[#dfdfdf] bg-white p-3 md:max-w-[16rem]">
           <img
-            src={invite.bank.qrImage}
+            src={qrImage}
             alt="QR code mừng cưới"
             loading="lazy"
-            className="mx-auto aspect-square w-36 object-cover md:w-44"
-            onError={applyFallbackQr}
+            className="mx-auto w-full rounded-lg object-contain"
           />
           <p
-            className="mt-3 text-[1.38rem] font-semibold leading-none tracking-[0.04em] md:text-[1.5rem]"
+            className="mt-2.5 text-[0.95rem] font-medium leading-none tracking-[0.02em] md:text-[1.05rem]"
             style={{ color: inviteTypography.primary, fontFamily: designTokens.typography.ui }}
           >
             {invite.bank.accountName}
           </p>
           <p
-            className="mt-2 text-xs uppercase tracking-[0.3em]"
+            className="mt-1.5 text-[10px] uppercase tracking-[0.3em]"
             style={{ color: inviteTypography.muted, fontFamily: designTokens.typography.ui }}
           >
             {invite.bank.bankName}
           </p>
           <p
-            className="mt-2 text-[1.3rem] font-semibold tracking-[0.04em]"
+            className="mt-1.5 text-[0.95rem] font-medium tracking-[0.03em]"
             style={{ color: '#1f2321', fontFamily: designTokens.typography.ui }}
           >
             {invite.bank.accountNumber}

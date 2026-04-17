@@ -44,8 +44,8 @@ export const invite = {
   ],
   bank: {
     accountName: 'PHẠM VĂN HÀO',
-    accountNumber: '0123 456 789',
-    bankName: 'Vietcombank - CN TP.HCM',
+    accountNumber: '1356 4540 71',
+    bankName: 'Techcombank',
     transferNote: 'Mung cuoi Hao Han',
     qrImage:
       'https://api.qrserver.com/v1/create-qr-code/?size=520x520&data=VCB%20-%200123456789%20-%20NGUYEN%20MINH%20QUAN%20-%20Mung%20cuoi%20Mai%20Quan',
